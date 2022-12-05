@@ -6,6 +6,8 @@ const productsData = [
         numberOfVotes: 10,
         publishedAt: '2021-04-05',
         authorId: '1',
+         // This product belongs to the "Education" category
+        categoriesIds: ['1']
       },
       {
         name: 'Apollo',
@@ -14,6 +16,8 @@ const productsData = [
         numberOfVotes: 5,
         publishedAt: '2021-01-08',
         authorId: '2',
+        // This product belongs to the "Frameworks" and "API" categories
+        categoriesIds: ['2', '3']
       },
       {
         name: 'OneGraph',
@@ -22,6 +26,8 @@ const productsData = [
         numberOfVotes: 5,
         publishedAt: '2020-08-22',
         authorId: '1',
+         // This product belongs to the "API" category
+        categoriesIds: ['3']
       },
 ]
 /*
@@ -45,6 +51,24 @@ const userData = [
       },
 ]
 
+const categoriesData = [
+    {
+      id: '1',
+      slug: 'education',
+      name: 'Education',
+    },
+    {
+      id: '2',
+      slug: 'frameworks',
+      name: 'Frameworks',
+    },
+    {
+      id: '3',
+      slug: 'api',
+      name: 'API',
+    },
+  ]
+
 const resolvers = {
     Query: {
       appName: () =>
@@ -59,6 +83,12 @@ const resolvers = {
         //Instead of using the args parameter, we use object destructing to extract the value of the authorName argument from it immediately. 
         const user = userData.find(user => user.userName === authorName)
         return productsData.filter(product => product.authorId === user.id)
+      },
+
+      productsByCategory: (_, {slug}) => {
+        const category = categoriesData.find(category => category.slug===slug)
+        return productsData.filter(product => product.categoriesIds.includes(category.id))
+
       }
   },
 
@@ -69,6 +99,14 @@ const resolvers = {
     author: (product) => {
         console.log(`Query.Product.author for "${product.name}"`)
         return userData.find(user => user.id===product.authorId)
+      },
+
+      categories: (product) => {
+        const res =  product.categoriesIds.map(categoryId => {
+            return categoriesData.find(category => category.id === categoryId )
+          })
+    
+          return res
       },
   },
 }
