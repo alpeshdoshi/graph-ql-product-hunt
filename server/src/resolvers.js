@@ -51,8 +51,15 @@ const resolvers = {
         'ProductHunt clone',
 
       allProducts: () => {
+        console.log('Query.allProducts')
         return productsData
      },
+     //query to get all products for a single user
+     productsByAuthor: (_, { authorName }) => { // Extract "authorName" from arguments- this technique is called object destructing.
+        //Instead of using the args parameter, we use object destructing to extract the value of the authorName argument from it immediately. 
+        const user = userData.find(user => user.userName === authorName)
+        return productsData.filter(product => product.authorId === user.id)
+      }
   },
 
    // Specifies how to get fields for the "Product" type
@@ -60,6 +67,7 @@ const resolvers = {
     //Each function in this object specifies how to get data for fields queried on the Product type. 
     //In this case we're only defining function to fetch author for a product
     author: (product) => {
+        console.log(`Query.Product.author for "${product.name}"`)
         return userData.find(user => user.id===product.authorId)
       },
   },
