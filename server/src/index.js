@@ -1,3 +1,4 @@
+require('../mongo.js')
 const { ApolloServer } = require('apollo-server')
 const { readSchema } = require('./schema.js')
 const { resolvers } = require('./resolvers.js')
