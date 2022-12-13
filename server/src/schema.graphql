@@ -17,6 +17,11 @@ type Query {
     productsByCategory(slug: String!): [Product!]
 }
 
+type Mutation {
+  createProduct(input: NewProduct): Product
+  createCategory(input: NewCategory!): Category!
+}
+
 "Product's information" 
 type Product {
   "name of a product"
@@ -38,6 +43,18 @@ type User {
 type Category {
   id: Int!
   "A URL-friendly category name that we’ll use when we build a frontend."
+  slug: String!
+  name: String!
+}
+
+input NewProduct {
+  name: String!,
+  description: String!,
+  url: String!,
+  categoriesIds: [ID!]!,
+}
+
+input NewCategory{
   slug: String!
   name: String!
 }

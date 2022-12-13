@@ -26,6 +26,30 @@ const resolvers = {
       }
   },
 
+  Mutation: {
+    createProduct: async(_, {input}) => {
+      const author = await User.findOne({userName: "ellen"})
+      return Product.create({
+        name: input.name,
+        description: input.description, 
+        url: input.url,
+        numberOfVotes: 0,
+        publishedAt: Date.now(),
+        authorId: author._id, 
+        categoriesIds: input.categoriesIds,
+      });
+
+    },
+
+    createCategory: async(_, {input}) => {
+      return Category.create({
+        slug: input.slug,
+        name: input.name,
+
+      });
+    },
+  },
+
    // Specifies how to get fields for the "Product" type
    Product: {
    /* 
