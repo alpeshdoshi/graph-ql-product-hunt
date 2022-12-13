@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose')
+const { UserInputError } = require('apollo-server')
 const Product = require('../models/Products.js')
 const Category = require('../models/Category.js')
 const User = require('../models/User.js')
@@ -15,6 +16,9 @@ const resolvers = {
 
      productsByAuthor: async(_, {authorName}) => {
       const user = await User.findOne({userName: authorName})
+      if (!user) {
+        throw new UserInputError('User does not exist')
+      }
       return Product.find({authorId: user._id})
 
      },
@@ -40,14 +44,31 @@ const resolvers = {
       });
 
     },
-
-    createCategory: async(_, {input}) => {
+    createCategory: async(_, { input } ) => {
+      errors = []
+      if (!input.user) {
+        errors.push({
+          field: 'user',
+          error: 'Should not be empty'
+        })
+      }
+      if (!input.slug) {
+        errors.push({
+          field: 'slug',
+          error: 'Should not be empty'
+        })
+      }
+      if (errors) {
+        throw new UserInputError('Invalid input', {
+          validationErrors: errors
+        });
+      }
       return Category.create({
         slug: input.slug,
         name: input.name,
-
-      });
-    },
+       });
+    }
+    
   },
 
    // Specifies how to get fields for the "Product" type

@@ -9,6 +9,7 @@ const typeDefs = readSchema()
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  debug: false,
   plugins: [
     ApolloServerPluginLandingPageGraphQLPlayground(),
   ],
